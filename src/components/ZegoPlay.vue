@@ -110,8 +110,22 @@
                 console.log(' ------------------------ end -------------------------------------------------------------------')
             });
 
-            //创流
-            zg.createStream({})
+            zg.on('IMRecvBroadcastMessage', (roomID, chatData) => {
+
+                console.log('=================================== 广播消息接收回调 ====================================')
+                console.log('roomID: ' + roomID);
+                console.log('chatData: ' + JSON.stringify(chatData));
+                console.log('=================================== end ===============================================')
+
+            });
+
+            zg.on('IMRecvBarrageMessage', (roomID, chatData) => {
+                console.log('=================================== 弹幕消息接收回调 ====================================')
+                console.log('roomID: ' + roomID);
+                console.log('chatData: ' + JSON.stringify(chatData));
+                console.log('=================================== end ===============================================')
+            });
+
         }
 
         loginRoom(): void {

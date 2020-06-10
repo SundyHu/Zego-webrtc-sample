@@ -112,6 +112,22 @@
                 console.log(' publishStats ' + publishStats);
                 console.log(' =========================== end =============================================');
             });
+
+            zg.on('IMRecvBroadcastMessage', (roomID, chatData) => {
+
+                console.log('=================================== 广播消息接收回调 ====================================')
+                console.log('roomID: ' + roomID);
+                console.log('chatData: ' + JSON.stringify(chatData));
+                console.log('=================================== end ===============================================')
+
+            });
+
+            zg.on('IMRecvBarrageMessage', (roomID, chatData) => {
+                console.log('=================================== 弹幕消息接收回调 ====================================')
+                console.log('roomID: ' + roomID);
+                console.log('chatData: ' + JSON.stringify(chatData));
+                console.log('=================================== end ===============================================')
+            });
         }
 
         joinRoom(): void {
@@ -149,6 +165,7 @@
                                                 zg.startPublishingStream(this.form.streamId, localVideoStream);
 
 
+                                                //发送弹幕消息
                                                 zg.sendBarrageMessage(this.form.roomId, "开始直播了哦")
                                                     .then(res => {
                                                         const {errorCode, messageID} = res;
@@ -158,6 +175,7 @@
                                                         })
                                                     })
 
+                                                //发送房间广播消息
                                                 zg.sendBroadcastMessage(this.form.roomId, "测试下发送消息");
                                             }
                                         );
@@ -173,9 +191,7 @@
             })
         }
 
-        stopPush()
-            :
-            void {
+        stopPush() {
             this.$confirm("确定要停止推流吗?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -195,9 +211,7 @@
             })
         }
 
-        leave()
-            :
-            void {
+        leave() {
             //zg.logoutRoom(this.form.roomId);
             this.$confirm("确定要停止直播吗?", "提示", {
                 confirmButtonText: "确定",
