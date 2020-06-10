@@ -78,10 +78,11 @@
 
         joinRoom(): void {
 
-            zg.enumDevices().then(res => {
-                const {cameras} = res;
-                alert(JSON.stringify(cameras));
-            });
+            const {audioDevice, videoDevice, speakerDevice, roomId} = this.form;
+            alert(audioDevice);
+            alert(videoDevice);
+            alert(speakerDevice);
+            alert(roomId);
         }
 
     }
