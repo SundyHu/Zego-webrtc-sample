@@ -125,40 +125,57 @@
             fetch(config.tokenUrl + "?app_id=" + config.appId + "&id_name=" + userID, {
                 method: 'GET'
             }).then(res => {
-                res.text().then(token => {
+                    res.text().then(token => {
 
-                    //登录房间
-                    zg.loginRoom(roomId, token, {userID, userName})
-                        .then(loginSuccess => {
-                            if (loginSuccess) {
+                            //登录房间
+                            zg.loginRoom(roomId, token, {userID, userName})
+                                .then(loginSuccess => {
+                                    if (loginSuccess) {
 
-                                zg.createStream({
-                                    camera: {
-                                        videoInput: videoDevice,
-                                        videoQuality: 3
+                                        zg.createStream({
+                                            camera: {
+                                                videoInput: videoDevice,
+                                                videoQuality: 3
+                                            }
+                                        }).then(localVideoStream => {
+
+                                                //预览
+                                                this.$refs.previewVideo.srcObject = localVideoStream;
+                                                this.$refs.previewVideo.autoplay = true;
+                                                this.$refs.previewVideo.muted = true;
+                                                //推流
+                                                this.form.streamId = 'stream_' + new Date().getTime();
+                                                //推流
+                                                zg.startPublishingStream(this.form.streamId, localVideoStream);
+
+
+                                                zg.sendBarrageMessage(this.form.roomId, "开始直播了哦")
+                                                    .then(res => {
+                                                        const {errorCode, messageID} = res;
+                                                        this.$message.info({
+                                                            type: 'success',
+                                                            message: 'errorCode:' + errorCode + ",messageID: " + messageID
+                                                        })
+                                                    })
+
+                                                zg.sendBroadcastMessage(this.form.roomId, "测试下发送消息");
+                                            }
+                                        );
                                     }
-                                }).then(localVideoStream => {
-
-                                    //预览
-                                    this.$refs.previewVideo.srcObject = localVideoStream;
-                                    this.$refs.previewVideo.autoplay = true;
-                                    this.$refs.previewVideo.muted = true;
-                                    //推流
-                                    this.form.streamId = 'stream_' + new Date().getTime();
-                                    //推流
-                                    zg.startPublishingStream(this.form.streamId, localVideoStream);
-                                });
-                            }
-                        }).catch(err => {
-                        alert('登录房间失败' + err);
-                    });
-                })
-            }).catch(err => {
+                                }).catch(err => {
+                                alert('登录房间失败' + err);
+                            });
+                        }
+                    )
+                }
+            ).catch(err => {
                 alert('获取令牌失败' + err);
             })
         }
 
-        stopPush(): void {
+        stopPush()
+            :
+            void {
             this.$confirm("确定要停止推流吗?", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -178,7 +195,9 @@
             })
         }
 
-        leave(): void {
+        leave()
+            :
+            void {
             //zg.logoutRoom(this.form.roomId);
             this.$confirm("确定要停止直播吗?", "提示", {
                 confirmButtonText: "确定",
