@@ -30,6 +30,8 @@
 
             <el-form-item>
                 <el-button type="primary" @click="joinRoom">加入房间(推流)</el-button>
+                <el-button type="warning" @click="stopPush">停止推流</el-button>
+                <el-button type="danger" @click="leave">结束直播</el-button>
             </el-form-item>
         </el-form>
 
@@ -107,14 +109,51 @@
                                 }).then(localVideoStream => {
 
                                     this.$refs.previewVideo.srcObject = localVideoStream;
-                                })
+                                });
                             }
                         }).catch(err => {
                         alert('登录房间失败' + err);
-                    })
+                    });
                 })
             }).catch(err => {
                 alert('获取令牌失败' + err);
+            })
+        }
+
+        stopPush(): void {
+            this.$confirm("确定要停止推流吗?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            })
+        }
+
+        leave(): void {
+            //zg.logoutRoom(this.form.roomId);
+            this.$confirm("确定要停止直播吗?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
             })
         }
 
