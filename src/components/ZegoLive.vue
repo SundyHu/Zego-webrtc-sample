@@ -18,7 +18,7 @@
             </el-form-item>
 
             <el-form-item label="扬声器">
-                <el-select v-model="form.speakerDevice">
+                <el-select v-model="form.speakerDevice" disabled>
                     <el-option v-for="item in speakerDeviceList" v-bind:key="item.deviceID"
                                v-bind:value="item.deviceID">{{item.deviceName}}
                     </el-option>
@@ -26,11 +26,12 @@
             </el-form-item>
             <el-form-item label="房间号">
                 <el-input v-model="form.roomId"></el-input>
+                <el-input v-model="form.streamId" type="hidden"></el-input>
             </el-form-item>
 
             <el-form-item>
                 <el-button type="primary" @click="joinRoom">加入房间(推流)</el-button>
-                <el-button type="warning" @click="stopPush">停止推流</el-button>
+                <el-button type="warning" @click="stopPush" disabled>停止推流</el-button>
                 <el-button type="danger" @click="leave">结束直播</el-button>
             </el-form-item>
         </el-form>
@@ -61,7 +62,8 @@
             audioDevice: '',
             videoDevice: '',
             speakerDevice: '',
-            roomId: ''
+            roomId: '',
+            streamId: ''
         }
 
         speakerDeviceList: { deviceID: string; deviceName: string }[] = [];
@@ -81,6 +83,35 @@
                 this.cameraDeviceList = cameras;
 
             })
+        }
+
+        constructor() {
+            super();
+
+            zg.on('roomStreamUpdate', (roomID, updateType, streamList) => {
+                console.log('======================== roomStreamUpdate callback ==========================================');
+                console.log(' roomID: ' + roomID);
+                console.log(' updateType: ' + updateType);
+                console.log(' streamList: ' + streamList);
+                console.log('========================== end ===============================================');
+            });
+
+            zg.on('publisherStateUpdate', result => {
+                console.log('=========================== publisherStateUpdate callback =========================================');
+                const {streamID, state, errorCode, extendedData} = result;
+                console.log(' streamID: ' + streamID);
+                console.log(' state ' + state);
+                console.log(' errorCode ' + errorCode);
+                console.log(' extendedData ' + extendedData);
+                console.log('=========================== end =============================================');
+            });
+
+            zg.on('publishQualityUpdate', (streamID, publishStats) => {
+                console.log('======================== publishQualityUpdate =========================================');
+                console.log(' streamID: ' + streamID);
+                console.log(' publishStats ' + publishStats);
+                console.log(' =========================== end =============================================');
+            });
         }
 
         joinRoom(): void {
@@ -108,7 +139,12 @@
                                     }
                                 }).then(localVideoStream => {
 
+                                    //预览
                                     this.$refs.previewVideo.srcObject = localVideoStream;
+                                    //推流
+                                    this.form.streamId = 'stream_' + new Date().getTime();
+                                    //推流
+                                    zg.startPublishingStream(this.form.streamId, localVideoStream);
                                 });
                             }
                         }).catch(err => {
@@ -126,6 +162,8 @@
                 cancelButtonText: "取消",
                 type: 'warning'
             }).then(() => {
+
+                zg.stopPublishingStream(this.form.streamId);
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
@@ -145,6 +183,8 @@
                 cancelButtonText: "取消",
                 type: 'warning'
             }).then(() => {
+
+                zg.logoutRoom(this.form.roomId);
                 this.$message({
                     type: 'success',
                     message: '操作成功!'
