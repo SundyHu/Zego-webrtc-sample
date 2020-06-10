@@ -37,7 +37,7 @@
         </el-form>
 
         <div class="previewVideo">
-            <video ref="previewVideo" autoplay muted playsinline controls></video>
+            <video ref="previewVideo"></video>
         </div>
     </div>
 </template>
@@ -141,6 +141,8 @@
 
                                     //预览
                                     this.$refs.previewVideo.srcObject = localVideoStream;
+                                    this.$refs.previewVideo.autoplay = true;
+                                    this.$refs.previewVideo.muted = true;
                                     //推流
                                     this.form.streamId = 'stream_' + new Date().getTime();
                                     //推流
@@ -184,11 +186,18 @@
                 type: 'warning'
             }).then(() => {
 
-                zg.logoutRoom(this.form.roomId);
-                this.$message({
-                    type: 'success',
-                    message: '操作成功!'
-                });
+                const flag: boolean = zg.stopPublishingStream(this.form.streamId);
+                if (flag) {
+                    this.$refs.previewVideo.autoplay = false;
+                    this.$refs.previewVideo.pause();
+                    this.$refs.previewVideo.srcObject = null;
+                    zg.logoutRoom(this.form.roomId);
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    });
+                }
+
             }).catch(() => {
                 this.$message({
                     type: 'info',
