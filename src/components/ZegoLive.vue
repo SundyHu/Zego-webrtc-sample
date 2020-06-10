@@ -32,6 +32,10 @@
                 <el-button type="primary" @click="joinRoom">加入房间(推流)</el-button>
             </el-form-item>
         </el-form>
+
+        <div class="previewVideo">
+            <video ref="previewVideo" autoplay muted playsinline controls></video>
+        </div>
     </div>
 </template>
 
@@ -63,6 +67,7 @@
         microphoneDeviceList: { deviceID: string; deviceName: string }[] = [];
         $refs!: {
             form: HTMLFontElement;
+            previewVideo: HTMLVideoElement;
         }
 
         mounted() {
@@ -79,10 +84,38 @@
         joinRoom(): void {
 
             const {audioDevice, videoDevice, speakerDevice, roomId} = this.form;
-            alert(audioDevice);
-            alert(videoDevice);
-            alert(speakerDevice);
-            alert(roomId);
+
+            const userID = "live" + new Date().getTime();
+            const userName = "Cindy.Yang";
+
+            //获取令牌
+            fetch(config.tokenUrl + "?app_id=" + config.appId + "&id_name=" + userID, {
+                method: 'GET'
+            }).then(res => {
+                res.text().then(token => {
+
+                    //登录房间
+                    zg.loginRoom(roomId, token, {userID, userName})
+                        .then(loginSuccess => {
+                            if (loginSuccess) {
+
+                                zg.createStream({
+                                    camera: {
+                                        videoInput: videoDevice,
+                                        videoQuality: 3
+                                    }
+                                }).then(localVideoStream => {
+
+                                    this.$refs.previewVideo.srcObject = localVideoStream;
+                                })
+                            }
+                        }).catch(err => {
+                        alert('登录房间失败' + err);
+                    })
+                })
+            }).catch(err => {
+                alert('获取令牌失败' + err);
+            })
         }
 
     }
