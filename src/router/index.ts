@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import Demo from "@/components/Demo.vue";
 import ZegoPlay from "@/components/ZegoPlay.vue";
 import ZegoLive from "@/components/ZegoLive.vue";
+import SimpleLive from "@/components/SimpleLive.vue";
+import SimplePlay from "@/components/SimplePlay.vue";
 
 Vue.use(VueRouter)
 
@@ -34,6 +36,16 @@ const routes: Array<RouteConfig> = [
         path: '/live',
         name: 'Live',
         component: ZegoLive
+    },
+    {
+        path: '/simpleLive',
+        name: 'SimpleLive',
+        component: SimpleLive
+    },
+    {
+        path: '/simplePlay',
+        name: 'SimplePlay',
+        component: SimplePlay
     }
 ]
 

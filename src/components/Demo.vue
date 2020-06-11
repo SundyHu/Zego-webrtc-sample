@@ -2,14 +2,14 @@
     <div class="container">
 
         <div>
-            <label>Test: </label>
-            <select v-model="type">
-                <option v-for="item in list" :key="item.id" v-bind:value="item.id">{{item.name}}</option>
-            </select>
+<!--            <label>Test: </label>-->
+<!--            <select v-model="type">-->
+<!--                <option v-for="item in list" :key="item.id" v-bind:value="item.id">{{item.name}}</option>-->
+<!--            </select>-->
 
-            <button @click="confirm">确定</button>
+<!--            <button @click="exportExcel" style="display: none">确定</button>-->
 
-            <el-button>测试</el-button>
+            <el-button @click="exportExcel">导出</el-button>
         </div>
     </div>
 </template>
@@ -41,8 +41,24 @@
             }
         }
 
-        confirm() {
-            alert(this.type);
+        exportExcel() {
+            fetch('http://192.168.2.3:9000/export/export', {
+                method: 'GET',
+                headers: {
+                    'ResponseType': 'blob'
+                }
+            }).then(res => {
+
+                res.blob().then(stream => {
+                    const blob = new Blob([stream], {type: "application/vnd.ms-excel;charset=utf-8"});
+                    const fileName = "111.xlsx";
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                    window.URL.revokeObjectURL(link.href);
+                })
+            })
         }
     }
 </script>
