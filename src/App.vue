@@ -3,11 +3,11 @@
     <div id="nav">
 <!--      <router-link to="/">Home</router-link> |-->
 <!--      <router-link to="/about">About</router-link> |-->
-      <router-link to="/live">开播</router-link> |
-      <router-link to="/play">观看</router-link> |
-      <router-link to="/demo">Demo</router-link>|
+<!--      <router-link to="/live">开播</router-link> |-->
+<!--      <router-link to="/play">观看</router-link> |-->
+<!--      <router-link to="/demo">Demo</router-link>|-->
         <router-link to="/simpleLive">直播</router-link> |
-        <router-link to="/simplePlay">看播</router-link>
+        <router-link to="/simplePlay">观看</router-link>
     </div>
     <router-view/>
   </div>
