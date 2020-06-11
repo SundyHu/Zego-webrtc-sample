@@ -98,6 +98,10 @@
                                         video: true
                                     }
                                 }).then(localVideoStream => {
+                                    this.$message({
+                                        type: 'info',
+                                        message: '创建流成功' + localVideoStream
+                                    })
                                     this.$refs.previewVideo.autoplay = true;
                                     this.$refs.previewVideo.muted = true;
                                     this.$refs.previewVideo.srcObject = localVideoStream;
@@ -107,6 +111,11 @@
 
                                     //推流
                                     zg.startPublishingStream('' + new Date().getTime(), localVideoStream);
+                                }).catch(err => {
+                                    this.$message({
+                                        type: 'error',
+                                        message: '创建流失败' + err
+                                    })
                                 });
                             }
                         }).catch(err => {
