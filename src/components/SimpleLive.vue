@@ -109,6 +109,15 @@
                                     //this.$refs.previewVideo.height = 600
                                     this.$refs.previewVideo.requestFullscreen();
 
+                                    //再获取一次设备
+                                    zg.enumDevices().then(res => {
+                                        const {cameras} = res;
+                                        this.$message({
+                                            type: 'success',
+                                            message: JSON.stringify(cameras)
+                                        })
+                                    })
+
                                     //推流
                                     zg.startPublishingStream('' + new Date().getTime(), localVideoStream);
                                 }).catch(err => {
