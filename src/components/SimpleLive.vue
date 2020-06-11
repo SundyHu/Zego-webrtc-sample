@@ -74,7 +74,7 @@
                                         const {fromUser, messageID, message, sendTime} = item;
                                         this.$message({
                                             type: 'info',
-                                            message: '收到' + fromUser + "的消息" + message
+                                            message: '收到' + fromUser.userName + "的消息" + message
                                         })
                                     })
                                 });

@@ -57,7 +57,7 @@
                 res.text().then(token => {
 
                     //登录房间
-                    zg.loginRoom(roomId, token, {userID, userName: 'Jason.Lee'})
+                    zg.loginRoom(roomId, token, {userID, userName: 'Joe.Chang'})
                         .then(loginSuccess => {
                             if (loginSuccess) {
 
@@ -70,7 +70,7 @@
                                         const {fromUser, messageID, message, sendTime} = item;
                                         this.$message({
                                             type: 'info',
-                                            message: '收到' + fromUser + "的消息" + message
+                                            message: '收到' + fromUser.userName + "的消息" + message
                                         })
                                     })
                                 })
