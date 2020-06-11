@@ -99,6 +99,8 @@
                                                     this.$refs.previewVideo.autoplay = true;
                                                     this.$refs.previewVideo.muted = true;
                                                     this.$refs.previewVideo.srcObject = remoteVideoStream;
+                                                    this.$refs.previewVideo.controls = true;
+                                                    this.$refs.previewVideo.requestFullscreen();
                                                 })
                                         })
                                     }
