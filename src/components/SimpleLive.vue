@@ -1,16 +1,22 @@
 <template>
 
-    <el-form ref="form" v-model="form" label-width="80px">
-        <el-form-item label="房间号">
-            <el-input v-model="form.roomId"/>
-        </el-form-item>
+    <div class="container">
+        <el-form ref="form" v-model="form" label-width="80px">
+            <el-form-item label="房间号">
+                <el-input v-model="form.roomId"/>
+            </el-form-item>
 
-        <el-form-item>
-            <el-button type="success" @click="submitForm">登录房间</el-button>
+            <el-form-item>
+                <el-button type="success" @click="submitForm">登录房间</el-button>
 
-            <el-button type="info" @click="sendMessage">发送消息</el-button>
-        </el-form-item>
-    </el-form>
+                <el-button type="info" @click="sendMessage">发送消息</el-button>
+            </el-form-item>
+        </el-form>
+
+        <div class="previewVideo">
+            <video ref="previewVideo"></video>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -32,6 +38,11 @@
 
         form = {
             roomId: ''
+        }
+
+        $refs!: {
+            form: HTMLFormElement;
+            previewVideo: HTMLVideoElement;
         }
 
         constructor() {
@@ -79,10 +90,19 @@
                                     })
                                 });
 
-                                zg.enumDevices().then(res => {
-                                    const {cameras} = res;
-                                    alert(JSON.stringify(cameras));
-                                })
+                                //建流
+                                zg.createStream({
+                                    camera: {
+                                        audio: true,
+                                        videoQuality: 3,
+                                        video: true
+                                    }
+                                }).then(localVideoStream => {
+                                    this.$refs.previewVideo.autoplay = true;
+                                    this.$refs.previewVideo.muted = true;
+                                    this.$refs.previewVideo.srcObject = localVideoStream;
+                                    this.$refs.previewVideo.requestFullscreen();
+                                });
                             }
                         }).catch(err => {
                         this.$message({
