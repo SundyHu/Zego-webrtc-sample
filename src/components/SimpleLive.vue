@@ -105,9 +105,9 @@
                                     this.$refs.previewVideo.autoplay = true;
                                     this.$refs.previewVideo.muted = true;
                                     this.$refs.previewVideo.srcObject = localVideoStream;
-                                    this.$refs.previewVideo.width = 800
-                                    this.$refs.previewVideo.height = 600
-                                    //this.$refs.previewVideo.requestFullscreen();
+                                    //this.$refs.previewVideo.width = 800
+                                    //this.$refs.previewVideo.height = 600
+                                    this.$refs.previewVideo.requestFullscreen();
 
                                     //推流
                                     zg.startPublishingStream('' + new Date().getTime(), localVideoStream);
