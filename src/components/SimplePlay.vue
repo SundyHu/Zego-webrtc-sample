@@ -96,12 +96,21 @@
                                             //开始拉流
                                             zg.startPlayingStream(streamID)
                                                 .then(remoteVideoStream => {
+                                                    this.$msgbox({
+                                                        title: '提示',
+                                                        message: '拉流成功'
+                                                    })
                                                     this.$refs.previewVideo.autoplay = true;
                                                     this.$refs.previewVideo.muted = true;
                                                     this.$refs.previewVideo.srcObject = remoteVideoStream;
                                                     this.$refs.previewVideo.controls = true;
                                                     this.$refs.previewVideo.requestFullscreen();
+                                                }).catch(err => {
+                                                this.$message({
+                                                    type: 'info',
+                                                    message: '拉流失败' + err
                                                 })
+                                            })
                                         })
                                     }
                                 })
