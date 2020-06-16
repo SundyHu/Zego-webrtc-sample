@@ -107,9 +107,24 @@
                                     this.$refs.previewVideo.srcObject = localVideoStream;
                                     //this.$refs.previewVideo.width = 800
                                     //this.$refs.previewVideo.height = 600
-                                    this.$refs.previewVideo.requestFullscreen();
 
+                                    const target = this.$refs.previewVideo;
+                                    const docElmWithBrowsersFullScreenFunctions = target as HTMLVideoElement & {
+                                        mozRequestFullScreen(): Promise<void>;
+                                        webkitRequestFullscreen(): Promise<void>;
+                                        msRequestFullscreen(): Promise<void>;
+                                    };
 
+                                    if (docElmWithBrowsersFullScreenFunctions.requestFullscreen) {
+                                        docElmWithBrowsersFullScreenFunctions.requestFullscreen();
+                                    } else if (docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen) { /* Firefox */
+                                        docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen();
+                                    } else if (docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                                        docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen();
+                                    } else if (docElmWithBrowsersFullScreenFunctions.msRequestFullscreen) { /* IE/Edge */
+                                        docElmWithBrowsersFullScreenFunctions.msRequestFullscreen();
+                                    }
+                                    
                                     //推流
                                     zg.startPublishingStream('' + new Date().getTime(), localVideoStream);
                                 }).catch(err => {
